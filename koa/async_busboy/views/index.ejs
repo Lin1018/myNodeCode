@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%= title %></title>
+	<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+	<%= title %>
+<div>
+	<form action="/upload" method="POST" enctype="multipart/form-data">
+		fileName: <input type="text" name="head"><br/>
+		<input type="file" name="file"><br/>
+		<input type="submit" value="Submit">
+	</form>
+</div>
+
+</body>
+</html>
