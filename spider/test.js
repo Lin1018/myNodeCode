@@ -1,73 +1,18 @@
 const http = require('http');
-const cheerio = require('cheerio');
-const url = 'http://www.imooc.com/learn/75';
 
-function filterChapters(html) {
-	var $ = cheerio.load(html);
-	var chapters = $('.chapter');
+var url ='http://www.imooc.com/learn/637'
 
-	// [{
-	//   chapterTitle: '',
-	//   videos: [
-	//     title: '',
-	//     id: ''
-	//   ]
-	// }]
-	 
-	var courseData = [];
+http.get(url,function(res){
+	var html = '';
 
-	chapters.each(function(item) {
-		var chapter = $(this);
-		var chapterTitle = chapter.find('strong').text().trim();
-		var videos = chapter.find('.video').children('li');
-		var chapterData = {
-			chapterTitle: chapterTitle,
-			videos: []
-		};
-
-		videos.each(function(item) {
-			var video = $(this).find('.J-media-item');
-			var videoTitle = video.text().trim();
-			var id = video.attr('href').split('video/')[1];
-
-			chapterData.videos.push({
-				title: videoTitle,
-				id: id
-			});
-		})
-
-		courseData.push(chapterData);
+	res.on('data', function(data){
+		html += data;
 	});
 
-	return courseData;
-};
-
-function printCourseInfo(courseData) {
-	courseData.forEach(function(item) {
-		var chapterTitle = item.chapterTitle;
-		console.log( chapterTitle );
-
-		item.videos.forEach(function(video) {
-			console.log('【'+ video.id +'】' + video.title);
-		});
+	res.on('end', function(){
+		console.log(html);
 	});
 
-};
-
-http.get(url, function(res) {
-  html = '';
-
-  res.on('data', function(chunk) {
-    html += chunk;
-  });
-
-  res.on('end', function() {
-    var courseData = filterChapters(html);
-	printCourseInfo(courseData);
-  });
-
-  res.on('error', function(err) {
-	console.log(err);
-  });
-
+}).on('error',function(){
+	console.log('获取课程数据出错！');
 });

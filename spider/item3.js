@@ -9,7 +9,7 @@ function filterChapters(html) {
 	var chapters = $('.chapter');
 	var title = $('.course-infos .path span').text();
 	var number = parseInt($($('.statics .meta-value')[0]).text(), 10);
-	
+
 	// courseData = {
 	// 	title: title,
 	// 	number: number,
