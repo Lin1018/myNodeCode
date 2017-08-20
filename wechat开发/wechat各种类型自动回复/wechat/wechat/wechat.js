@@ -6,7 +6,9 @@ const util = require('./util.js')
 
 const prefix = 'https://api.weixin.qq.com/cgi-bin/';
 const api = {
-	accessToken: prefix + 'token?grant_type=client_credential'
+	accessToken: prefix + 'token?grant_type=client_credential',
+	// 新增临时素材接口
+	upload: prefix + 'media/upload?'
 }
 
 // 判断access_token(票据)是否过期
@@ -83,6 +85,76 @@ Wechat.prototype.updateAccessToken = function() {
 	});
 
 }
+/*
+Wechat.prototype.uploadMaterial = function(type, filepath) {
+	var that = this;
+	var form = {
+		media: fs.createReadStream(filepath);
+	}
+
+	var AppID = this.AppID;
+	var AppSecret = this.AppSecret;
+
+	return new Promise(function(resolve, reject) {
+		that
+			.fetchAccessToken()
+			.then(function(data) {
+				var url = api.upload + '&access_token=' + data.access_token + '&type=' +type;
+
+				request({method: 'POST', url:url, formData: form, json:true}).then(function(response) {
+					var _data = response.body;
+					
+					if (_data) {
+						resolve(_data);
+					} else {
+						throw new Error('Upload material fails');
+					}
+				})
+				.catch(function(err) {
+					reject(err);
+				});
+			});
+
+	});
+}
+/*
+Wechat.prototype.fetchAccessToken = function(data) {
+	var that = this;
+
+	if (this.access.token && this.expires_in) {
+		if (this.isValidAccessToken(this)) {
+			return Promise.resolve(this);
+		}
+	}
+
+	this.getAccessToken()
+	.then(function(data) {
+		try {  // 票据内容JSON化
+			data = JSON.parse(data);
+		}
+		catch(e) {
+			// 文件异常或非法,则更新票据
+			return that.updateAccessToken();
+		}
+		// 合法性检查
+		if (that.isValidAccessToken(data)) {
+			// 返回票据
+			return Promise.resolve(data);
+		} else {
+			// 非法或过期,更新票据
+			return that.updateAccessToken();
+		}
+
+	})  
+	.then (function(data) {
+		that.access_token = data.access_token;
+		that.expires_in = data.expires_in;  // 过期字段
+
+		that.saveAccessToken(data);  // 存储票据
+
+		return Promise.resolve(data);
+	});
+}*/
 
 // reply通过call上下文已经改变，this指向g.js
 Wechat.prototype.reply = function() {
