@@ -13,7 +13,7 @@ app.use(function *(next){
 });
 
 // logger
-app.use(function *(next){
+app.use(function* (next){
   // (2) 进入 logger 中间件
   var start = new Date;
   yield next;
